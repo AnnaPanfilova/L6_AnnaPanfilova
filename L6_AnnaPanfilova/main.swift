@@ -24,7 +24,7 @@ struct Queue<T: Colored> {
     }
     
     mutating func dequeue() -> T? {
-        return elements.removeFirst()
+        return elements.count > 0 ? elements.removeFirst() : nil
     }
     
     /**
@@ -72,4 +72,43 @@ struct Queue<T: Colored> {
         return colors
     }
 
+}
+
+class Car: Colored {
+    var brand: String
+    var color: Color
+    
+    init(brand: String, color: Color) {
+        self.brand = brand
+        self.color = color
+    }
+    
+    func printSelf() {
+        print("brand: \(brand), color: \(color)")
+    }
+}
+
+var carsQueue = Queue<Car>()
+
+carsQueue.enqueue(Car(brand: "BMW", color: .red))
+carsQueue.enqueue(Car(brand: "Mercedes", color: .blue))
+carsQueue.enqueue(Car(brand: "Skoda", color: .green))
+carsQueue.enqueue(Car(brand: "Lada", color: .red))
+
+// Brush to purple all red cars
+carsQueue.brushForColor(new: .purple) {
+    $0 == .red
+}
+
+// Remove from queue all blue cars
+carsQueue.cleanWithColor {
+    $0 == .blue
+}
+
+print(carsQueue[0, 1]) // print colors for first and second car in queue
+print(carsQueue[2, 10]) // print colors for third and tenth car in queue (returns nil)
+
+// print cars form queue
+while let car = carsQueue.dequeue() {
+    car.printSelf()
 }
